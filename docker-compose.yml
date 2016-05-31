@@ -1,0 +1,49 @@
+nginx:
+  build: ./nginx
+  ports: 
+    - 80:80
+    - 443:443
+  links:
+    - php56
+  volumes_from:
+    - code
+  volumes:
+    - ./nginx/sites:/etc/nginx/sites-enabled
+  restart: always
+
+php56:
+  build: ./php56
+  ports: 
+    - 9000:9000
+  volumes_from:
+    - code
+  links:
+    - mysql57:db
+
+code:
+  build: ./code
+  volumes:
+    - /Users/funnyboy/work:/var/www/projects
+  tty: true
+
+mysql57:
+  build: ./mysql57
+  volumes:
+    - ./localdb/.db/mysql:/var/lib/mysql:rw
+  ports:
+    - "3306"
+  tty: true
+  volumes_from:
+    - code
+
+phpmyadmin:
+  build: ./phpmyadmin
+  links:
+    - mysql57:mysql
+    - php56
+  ports:
+    - 8181:80
+  environment:
+    MYSQL_USERNAME: root
+    MYSQL_ROOT_PASSWORD: 12345
+    PMA_HOST: mysql
