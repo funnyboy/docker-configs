@@ -2,8 +2,6 @@ FROM php:5.6-fpm
 
 MAINTAINER Dmitry Zaiets "funnyboy1190@gmail.com"
 
-RUN docker-php-ext-install mysql mysqli pdo pdo_mysql
-
 RUN apt-get update && apt-get install -my \
         curl \
         wget \
@@ -15,32 +13,31 @@ RUN apt-get update && apt-get install -my \
         libmcrypt-dev \
         libpng12-dev \
         ssmtp \
-        libicu-dev \
-        libxslt1-dev \
+	php5-curl \
+	php5-xsl \
     && docker-php-ext-install -j$(nproc) iconv mcrypt bcmath mbstring pdo pdo_mysql soap \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd pcntl intl xsl zip
+    && docker-php-ext-install -j$(nproc) gd zip
 
-# Install composer
 RUN bash -c "wget http://getcomposer.org/composer.phar && mv composer.phar /usr/local/bin/composer"
 RUN bash -c "chmod 0777 /usr/local/bin/composer"
 
 # Install XDebug
-RUN pecl install xdebug-2.4.0
+RUN pecl install xdebug-2.3.2
 RUN docker-php-ext-enable xdebug
 
 ADD xdebug.ini /usr/local/etc/php/conf.d/
 ADD config.ini /usr/local/etc/php/conf.d/
 
 RUN cp /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.bak
-COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
-
-ADD php-fpm.conf /etc/php5/php-fpm.conf
-ADD www.conf /etc/php5/php-fpm.d/www.conf
+COPY ssmtp.conf /etc/ssmtp/ssmtp.conf  
 
 # Need for MC
 RUN bash -c "export TERM=xterm"
 
+RUN wget https://files.magerun.net/n98-magerun.phar
+RUN chmod 0777 n98-magerun.phar
+RUN cp ./n98-magerun.phar /usr/local/bin/n98-magerun
+
 RUN useradd -ms /bin/bash funnyboy
 USER funnyboy
-VOLUME /var/www/projects

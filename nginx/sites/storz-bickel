@@ -1,10 +1,10 @@
 server {
   listen 80;
 
-  root /var/www/projects/storz-bickel/www;
+  root /var/www/projects/storz-bickel-new/www;
   index index.php index.html index.htm;
 
-  server_name storz-bickel.loc volcano.loc; 
+  server_name storz-bickel.loc;
 
   location / {
     # This line is required

@@ -1,1 +1,2 @@
-/localdb/.db/
+.idea/
+localdb/.db/mysql/

@@ -1,10 +1,10 @@
 server {
   listen 80;
 
-  root /var/www/projects/test;
+  root /var/www/projects/wineshop/www;
   index index.php index.html index.htm;
 
-  server_name test.loc;
+  server_name wineshop.loc;
 
   location / {
     # This line is required

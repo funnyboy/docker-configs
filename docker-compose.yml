@@ -5,12 +5,31 @@ nginx:
     - 443:443
   links:
     - php56
-    - php7
   volumes_from:
     - code
   volumes:
     - ./nginx/sites:/etc/nginx/sites-enabled
+    - ./nginx/logs:/var/log/nginx:rw
   restart: always
+
+mailhog:
+  image: mailhog/mailhog
+  expose:
+    - "1025"
+    - "8025"
+  ports:
+    - "8025:8025"
+
+mysql57:
+  build: ./mysql57
+  ports:
+    - 3306:3306
+  environment:
+    MYSQL_ROOT_PASSWORD: 12345
+  volumes_from:
+    - code
+  volumes:
+    - ./localdb/.db/mysql:/var/lib/mysql:rw
 
 php56:
   build: ./php56
@@ -18,29 +37,17 @@ php56:
     - code
   links:
     - mysql57:db
-
-php7:
-  build: ./php7
-  volumes_from:
-    - code
-  links:
-    - mysql57:db
+    - mailhog:mail
+  volumes:
+    - /var/run/docker.sock:/tmp/docker.sock:rw
+  environment:
+    TERM: xterm
 
 code:
   build: ./code
   volumes:
-    - /Users/funnyboy/work:/var/www/projects
+    - /home/funnyboy/data/work:/var/www/projects
   tty: true
-
-mysql57:
-  build: ./mysql57
-  volumes:
-    - ./localdb/.db/mysql:/var/lib/mysql:rw
-  ports:
-    - "3306"
-  tty: true
-  volumes_from:
-    - code
 
 phpmyadmin:
   build: ./phpmyadmin
@@ -53,3 +60,5 @@ phpmyadmin:
     MYSQL_USERNAME: root
     MYSQL_ROOT_PASSWORD: 12345
     PMA_HOST: mysql
+
+
