@@ -5,6 +5,7 @@ nginx:
     - 443:443
   links:
     - php56
+    - php7
   volumes_from:
     - code
   volumes:
@@ -13,8 +14,13 @@ nginx:
 
 php56:
   build: ./php56
-  ports: 
-    - 9000:9000
+  volumes_from:
+    - code
+  links:
+    - mysql57:db
+
+php7:
+  build: ./php7
   volumes_from:
     - code
   links:

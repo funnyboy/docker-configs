@@ -1,1 +1,1 @@
-FROM phpmyadmin;
+FROM phpmyadmin/phpmyadmin

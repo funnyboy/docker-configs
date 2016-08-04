@@ -4,7 +4,7 @@ server {
   root /var/www/projects/storz-bickel/www;
   index index.php index.html index.htm;
 
-  server_name storz-bickel.loc;
+  server_name storz-bickel.loc volcano.loc; 
 
   location / {
     # This line is required
